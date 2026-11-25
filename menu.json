@@ -1,6 +1,6 @@
 {
-  "menu_version": "1795629508893",
-  "updated_at": "2026-11-25T17:58:28.893Z",
+  "menu_version": "1795629548902",
+  "updated_at": "2026-11-25T17:59:08.902Z",
   "categories": [
     {
       "id": "cat_1",
@@ -2282,24 +2282,6 @@
       "img": "Тропический_смузи.webp",
       "img_hash": "41969e9f485de4de839746787fe9c218",
       "updated_at": "2026-11-10 22:54:40"
-    },
-    {
-      "id": "dish_1795629508893",
-      "category_id": "cat_4",
-      "order_num": 109,
-      "price": "220 ТМТ",
-      "badge": "ХИТ",
-      "size": "small",
-      "sub": "",
-      "tags": [],
-      "name_ru": "Рыбка",
-      "desc_ru": "Описание",
-      "name_tm": "Рыбка",
-      "desc_tm": "Rybka",
-      "name_en": "Fish",
-      "desc_en": "Fish",
-      "img": "logo.webp",
-      "img_hash": ""
     }
   ],
   "files": [
