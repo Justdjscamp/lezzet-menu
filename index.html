@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Lezzet Cafe — Управление меню (GitHub)</title>
+  <link rel="icon" type="image/webp" href="./uploads/logo.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <!-- Login Screen (GitHub Repo + Token) -->
+  <div id="loginScreen" class="login-overlay">
+    <div class="login-card">
+      <div class="login-brand">
+        <img src="./uploads/logo.webp" alt="Lezzet Cafe" class="login-logo" onerror="this.style.display='none'">
+        <h1>Lezzet Cafe</h1>
+        <p>Управление меню через GitHub</p>
+      </div>
+      <form id="loginForm" class="login-form">
+        <div class="form-group">
+          <label>Репозиторий (owner/repo)</label>
+          <input type="text" id="loginRepo" required placeholder="username/lezzet-menu">
+        </div>
+        <div class="form-group">
+          <label>GitHub Token (PAT)</label>
+          <input type="password" id="loginToken" required placeholder="github_pat_...">
+        </div>
+        <div class="form-group">
+          <label>Ветка</label>
+          <input type="text" id="loginBranch" value="main" placeholder="main">
+        </div>
+        <div id="loginError" class="login-error hidden"></div>
+        <button type="submit" id="loginSubmitBtn" class="btn btn-primary btn-block">Войти и загрузить меню</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main App Shell -->
+  <div id="appShell" class="app-shell hidden">
+    <!-- Mobile Top Header Bar -->
+    <header class="mobile-top-bar">
+      <div class="mobile-brand">
+        <img src="./uploads/logo.webp" alt="Logo" class="mobile-logo">
+        <div class="mobile-brand-info">
+          <span class="mobile-brand-name">Lezzet Cafe</span>
+          <span class="mobile-version-pill" id="mobileVersionBadge">#1</span>
+        </div>
+      </div>
+      <button id="mobileLogoutBtn" class="mobile-logout-btn" title="Выйти">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        <span>Выйти</span>
+      </button>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="./uploads/logo.webp" alt="Logo" class="sidebar-logo">
+        <div class="sidebar-brand-text">
+          <h2>Lezzet Cafe</h2>
+          <span>GITHUB CRM</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="dishes">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+          <span>Блюда<em class="desktop-only-label"> и позиции</em></span>
+        </button>
+        <button class="nav-item" data-tab="categories">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Категории<em class="desktop-only-label"> меню</em></span>
+        </button>
+        <button class="nav-item" data-tab="settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>Настройки<em class="desktop-only-label"> & Экспорт</em></span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="version-badge">Версия меню: <span id="currentVersionBadge">#1</span></div>
+        <button id="logoutBtn" class="btn-logout">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          <span>Выйти</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Content Area -->
+    <main class="main-content">
+      <header class="content-header">
+        <div class="header-left">
+          <h1 id="pageTitle">Блюда и позиции меню</h1>
+          <p id="pageSubtitle">Редактирование и сохранение напрямую в GitHub (WebP)</p>
+        </div>
+        <div class="header-right">
+          <button id="headerActionBtn" class="btn btn-primary">
+            <span>+ Добавить блюдо</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- TAB 1: DISHES -->
+      <section id="tabDishes" class="tab-pane active">
+        <div class="admin-search-bar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="admin-search-icon"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="search" id="dishSearchInput" class="admin-search-input" placeholder="Быстрый поиск блюда по названию или цене...">
+        </div>
+        <div class="categories-filter-bar" id="categoryFilterBar"></div>
+        <div class="dishes-grid" id="dishesGrid"></div>
+      </section>
+
+      <!-- TAB 2: CATEGORIES -->
+      <section id="tabCategories" class="tab-pane">
+        <div class="categories-management-grid" id="categoriesGrid"></div>
+      </section>
+
+      <!-- TAB 3: SETTINGS & EXPORT -->
+      <section id="tabSettings" class="tab-pane">
+        <div class="settings-grid">
+          <div class="section-card">
+            <h2>Подключение к GitHub</h2>
+            <p class="text-muted mt-2">
+              Репозиторий: <code id="settingsRepoInfo">—</code> (ветка <code id="settingsBranchInfo">main</code>)
+            </p>
+            <div class="mt-4">
+              <button id="refreshFromGitBtn" class="btn btn-secondary">↻ Перезагрузить из GitHub</button>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <h2>Экспорт данных (menu.json)</h2>
+            <p class="text-muted mt-2">
+              Все изменения сохраняются в файл <code>menu.json</code> в репозитории. Вы также можете скачать актуальный файл для переноса на VDS сервер.
+            </p>
+            <div class="backup-action-box mt-4">
+              <button id="downloadMenuJsonBtn" class="btn btn-primary btn-lg">
+                <span>Скачать menu.json</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL: EDIT/ADD DISH -->
+  <dialog id="dishModal" class="admin-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="dishModalTitle">Редактирование блюда</h2>
+        <button class="btn-close-modal" onclick="closeDishModal()">&times;</button>
+      </div>
+
+      <form id="dishForm" class="modal-form">
+        <input type="hidden" id="dishId">
+        <input type="hidden" id="dishImg">
+        <input type="hidden" id="dishImgHash">
+
+        <div class="dish-modal-top-grid">
+          <div class="dropzone-box" id="dishDropzone">
+            <div class="dropzone-preview" id="dishDropzonePreview"></div>
+            <div class="dropzone-content" id="dishDropzoneContent">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+              <span>Перетащите фото или нажмите</span>
+              <small>Автоконвертация JPG/PNG в WebP</small>
+            </div>
+            <input type="file" id="dishFileInput" accept="image/*" class="sr-only">
+          </div>
+
+          <div class="dish-meta-fields">
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label>Категория меню *</label>
+                <select id="dishCategorySelect" required></select>
+              </div>
+              <div class="form-group w-36">
+                <label>Цена *</label>
+                <input type="text" id="dishPrice" required placeholder="140 TMT">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label>Бейдж</label>
+                <select id="dishBadge">
+                  <option value="">Без бейджа</option>
+                  <option value="ХИТ">ХИТ</option>
+                  <option value="МЕГА ХИТ">МЕГА ХИТ</option>
+                  <option value="ПРЕМИУМ">ПРЕМИУМ</option>
+                  <option value="РЕКОМЕНДУЕМ">РЕКОМЕНДУЕМ</option>
+                  <option value="ФИРМЕННЫЙ">ФИРМЕННЫЙ</option>
+                  <option value="КЛАССИКА">КЛАССИКА</option>
+                </select>
+              </div>
+              <div class="form-group w-36">
+                <label>Размер карточки</label>
+                <select id="dishSize">
+                  <option value="small">Обычная (1x1)</option>
+                  <option value="wide">Широкая (2x1)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group" id="dishSubGroup" style="display:none;">
+              <label>Подкатегория напитка</label>
+              <select id="dishSub">
+                <option value="">Без подкатегории</option>
+                <option value="Кофе">Кофе</option>
+                <option value="Чай">Чай</option>
+                <option value="Лимонады">Лимонады</option>
+                <option value="Мохито">Мохито</option>
+                <option value="Сауэры">Сауэры</option>
+                <option value="Айс-Ти">Айс-Ти</option>
+                <option value="Милкшейки">Милкшейки</option>
+                <option value="Фреши">Фреши</option>
+                <option value="Смузи">Смузи</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Диетические теги</label>
+              <div class="checkbox-chips-group">
+                <label class="tag-chip"><input type="checkbox" value="chef" class="dish-tag-cb"> <span>👑 Шеф</span></label>
+                <label class="tag-chip"><input type="checkbox" value="spicy" class="dish-tag-cb"> <span>🌶️ Острое</span></label>
+                <label class="tag-chip"><input type="checkbox" value="seafood" class="dish-tag-cb"> <span>🦐 Морепродукты</span></label>
+                <label class="tag-chip"><input type="checkbox" value="veg" class="dish-tag-cb"> <span>🌱 Вегетарианское</span></label>
+                <label class="tag-chip"><input type="checkbox" value="nuts" class="dish-tag-cb"> <span>🥜 Орехи</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lang-tabs-wrapper mt-4">
+          <div class="lang-tab-buttons">
+            <button type="button" class="lang-tab-btn active" data-lang="ru">Русский (RU) *</button>
+            <button type="button" class="lang-tab-btn" data-lang="tm">Türkmen (TM) *</button>
+            <button type="button" class="lang-tab-btn" data-lang="en">English (EN) *</button>
+          </div>
+
+          <div class="lang-tab-content active" id="langTab_ru">
+            <div class="form-group">
+              <label>Название блюда (RU) *</label>
+              <input type="text" id="dishNameRu" required placeholder="Стейк Рибай">
+            </div>
+            <div class="form-group">
+              <label>Описание блюда (RU)</label>
+              <textarea id="dishDescRu" rows="3" placeholder="Мраморная говядина зернового откорма, специи..."></textarea>
+            </div>
+          </div>
+
+          <div class="lang-tab-content" id="langTab_tm">
+            <div class="form-group">
+              <label>Tagamyň ady (TM) *</label>
+              <input type="text" id="dishNameTm" required placeholder="Ribay steýk">
+            </div>
+            <div class="form-group">
+              <label>Düşündiriş (TM)</label>
+              <textarea id="dishDescTm" rows="3" placeholder="Mermer sygyr eti, ýörite tagamlar..."></textarea>
+            </div>
+          </div>
+
+          <div class="lang-tab-content" id="langTab_en">
+            <div class="form-group">
+              <label>Dish Name (EN) *</label>
+              <input type="text" id="dishNameEn" required placeholder="Ribeye Steak">
+            </div>
+            <div class="form-group">
+              <label>Description (EN)</label>
+              <textarea id="dishDescEn" rows="3" placeholder="Prime grain-fed marbled beef, herbs..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer mt-6">
+          <button type="button" class="btn btn-secondary" onclick="closeDishModal()">Отмена</button>
+          <button type="submit" class="btn btn-primary" id="saveDishBtn">Сохранить блюдо</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- MODAL: CATEGORY EDIT/ADD -->
+  <dialog id="categoryModal" class="admin-modal">
+    <div class="modal-content modal-content-sm">
+      <div class="modal-header">
+        <h2 id="categoryModalTitle">Категория меню</h2>
+        <button class="btn-close-modal" onclick="closeCategoryModal()">&times;</button>
+      </div>
+
+      <form id="categoryForm" class="modal-form">
+        <input type="hidden" id="categoryId">
+        <input type="hidden" id="categoryCover">
+        <input type="hidden" id="categoryCoverHash">
+
+        <div class="dropzone-box h-44 mb-4" id="catDropzone">
+          <div class="dropzone-preview" id="catDropzonePreview"></div>
+          <div class="dropzone-content" id="catDropzoneContent">
+            <span>Обложка категории</span>
+            <small>Нажмите для загрузки фото</small>
+          </div>
+          <input type="file" id="catFileInput" accept="image/*" class="sr-only">
+        </div>
+
+        <div class="form-group">
+          <label>Название (RU) *</label>
+          <input type="text" id="catNameRu" required placeholder="Завтраки">
+        </div>
+        <div class="form-group">
+          <label>Ady (TM) *</label>
+          <input type="text" id="catNameTm" required placeholder="Ertirlikler">
+        </div>
+        <div class="form-group">
+          <label>Name (EN) *</label>
+          <input type="text" id="catNameEn" required placeholder="Breakfasts">
+        </div>
+
+        <div class="modal-footer mt-6">
+          <button type="button" class="btn btn-secondary" onclick="closeCategoryModal()">Отмена</button>
+          <button type="submit" class="btn btn-primary" id="saveCategoryBtn">Сохранить категорию</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <div id="adminToast" class="admin-toast hidden"></div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
